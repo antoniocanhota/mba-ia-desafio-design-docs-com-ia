@@ -32,8 +32,6 @@ Opção escolhida: "Máquina de estados finita em processo com uma única transa
 
 Essa abordagem troca concorrência de escrita por consistência: a transação mantém locks de linha (notadamente na sequência de numeração de pedidos e nas linhas de produto tocadas) durante toda a sua duração, o que serializa a criação de pedidos no nível do banco de dados. Essa troca é tratada como aceitável para o volume de pedidos atual e ainda não comprovado do sistema, e espera-se que seja revisitada caso os requisitos de throughput sejam esclarecidos.
 
-[ENTRADA NECESSÁRIA: Qual é o throughput esperado de criação de pedidos, e a partir de qual volume a sequência de numeração de pedidos de linha única se torna um gargalo inaceitável?]
-
 ## Prós e Contras das Opções
 
 ### Opção 1: FSM em processo + transação única + tabela de auditoria embutida (escolhida)
@@ -64,12 +62,6 @@ Como as transições de status, os efeitos de estoque e o registro de auditoria 
 A trilha de auditoria é hoje uma tabela relacional simples, transacionalmente consistente, lida junto com o próprio pedido, e não um log de eventos de propósito geral. Se necessidades de relatórios, conformidade ou replay de estado crescerem além de uma simples consulta cronológica, a estrutura dessa tabela precisará ser revisitada.
 
 Manter locks de linha na sequência de numeração de pedidos e nas linhas de produto tocadas durante toda a duração de cada transação significa que o throughput de criação de pedidos é limitado pela contenção single-writer nessa sequência. Essa é uma troca aceita e deliberada hoje, mas também é a primeira restrição que precisará ser revisitada caso o sistema caminhe para maior volume de pedidos, integrações assíncronas com sistemas externos (gateways de pagamento, transportadoras) ou uma decomposição orientada a eventos/microsserviços do domínio de gestão de pedidos.
-
-[ENTRADA NECESSÁRIA: A numeração sequencial/sem lacunas de pedidos (`ORD-000001`) é um requisito rígido de negócio ou compliance, ou um identificador não sequencial pode ser adotado caso a tabela de sequência se torne uma restrição de escalabilidade?]
-
-[ENTRADA NECESSÁRIA: Fluxos de pedido paralelos ou ramificados (ex.: envios parciais, devoluções/reembolsos) estão planejados, o que exigiria redesenhar a atual tabela linear de transição de estados?]
-
-[ENTRADA NECESSÁRIA: A trilha de auditoria precisa evoluir para um mecanismo de nível de compliance ou replayable de event sourcing, ou uma tabela transacional de histórico é suficiente para o futuro previsível?]
 
 ## Referências
 
