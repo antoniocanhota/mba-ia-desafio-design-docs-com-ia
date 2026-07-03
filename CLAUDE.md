@@ -26,7 +26,6 @@ Full requirements and acceptance criteria for the documentation package are in `
 - ADRs live in `docs/adrs/` named `ADR-NNN-titulo-em-kebab-case.md`.
 - The FDD's error codes must use the `WEBHOOK_*` prefix, and its "Integração com o sistema existente" section must cite at least 4 real paths from `src/`.
 - Suggested production order: ADRs → RFC → FDD → PRD → Tracker → README (see `README.original.md`'s "Ordem de execução sugerida" for the full rationale).
-- `docs/adrs/mapping.md`, `docs/adrs/potential-adrs/`, and `docs/adrs/generated/` are scratch/working artifacts from an ADR-generation agent workflow (see Skills below), not part of the final deliverable set unless promoted into a numbered `ADR-NNN-*.md`.
 - **All deliverable documentation must be written in Brazilian Portuguese (pt-BR)**: `docs/PRD.md`, `docs/RFC.md`, `docs/FDD.md`, `docs/TRACKER.md`, every `docs/adrs/ADR-NNN-*.md`, and the root `README.md`. Section headings, prose, and table contents should all be in Portuguese, matching the language of `TRANSCRICAO.md` and `README.original.md`. Keep code identifiers, file paths, error codes (e.g. `WEBHOOK_*`), and technical terms without an established Portuguese equivalent (e.g. "outbox", "webhook", "backoff") as-is.
 
 ### Available skills for doc generation
