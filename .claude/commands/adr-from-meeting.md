@@ -33,6 +33,11 @@ Input padrão: `TRANSCRICAO.md` na raiz do repo. Se `$ARGUMENTS` tiver um caminh
 3. Percorra a transcrição falas por falas e separe:
    - **Decisões fechadas de arquitetura**: pontos em que alguém propõe e o grupo converge (frases como
      "decidido", "fica registrado como decisão", "anotado", ou uma proposta seguida de concordância explícita).
+     Uma decisão não precisa ter uma alternativa explicitamente debatida e rejeitada na transcrição para virar
+     candidata — decisões de convenção/reuso (ex.: "reaproveitar os padrões já existentes no código" em vez de
+     criar um padrão novo para o módulo) contam da mesma forma, mesmo quando a única alternativa é implícita.
+     A Fase 2 já permite alternativa "plausível" além de "real discutida" — não descarte na Fase 1 um item só
+     porque a transcrição não mostra um debate de opção A vs. opção B.
    - **Itens descartados ou adiados**: coisas cogitadas mas explicitamente rejeitadas ou empurradas pra uma fase
      futura. Para cada um, verifique se ele é uma **alternativa rejeitada de uma das decisões fechadas
      identificadas acima** (ex.: Redis Streams rejeitado em favor do outbox em MySQL; 3 tentativas rejeitadas em
@@ -59,6 +64,12 @@ Input padrão: `TRANSCRICAO.md` na raiz do repo. Se `$ARGUMENTS` tiver um caminh
    da 2ª iteração, ainda sobrar divergência não resolvida nesse item específico, pare de tentar corrigi-lo, use
    a melhor versão obtida e marque-o como "⚠️ não confirmado" quando for apresentá-lo ao usuário, com uma nota
    de uma linha explicando o que continua inconsistente.
+
+   **Checklist de cobertura**: se a reunião tiver uma fala de resumo/fechamento (um participante recapitulando
+   as decisões antes de encerrar a call), trate essa fala como um checklist independente. Liste cada decisão
+   mencionada nela e confirme que cada uma tem um item candidato correspondente na lista montada no passo 3. Se
+   faltar alguma, volte ao passo 3 e adicione o item antes de seguir para o passo 5 — não presuma que, por ser
+   breve ou sem debate de alternativas, ela não é candidata.
 
 5. Monte uma lista numerada de **decisões candidatas a ADR** e apresente ao usuário uma tabela assim:
 
