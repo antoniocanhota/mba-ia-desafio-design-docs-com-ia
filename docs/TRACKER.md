@@ -18,3 +18,12 @@
 | T014 | ADR-008 | Código | Padrão de `AppError` e `errorCode` | CODIGO | src/shared/errors/http-errors.ts |
 | T015 | ADR-008 | Código | Middleware central de erro | CODIGO | src/middlewares/error.middleware.ts |
 | T016 | ADR-008 | Código | Logger Pino já integrado ao projeto | CODIGO | src/shared/logger/index.ts |
+| T017 | RFC | Alternativa Descartada | Disparo síncrono dentro de `OrderService.changeStatus` descartado por acoplar disponibilidade de cliente externo à transação crítica | TRANSCRICAO | [09:04] Bruno |
+| T018 | RFC | Alternativa Descartada | Fila externa dedicada (Redis Streams) descartada por overengineering para um time pequeno | TRANSCRICAO | [09:07] Larissa |
+| T019 | RFC | Alternativa Descartada | Trigger de banco de dados para notificação reativa descartado por MySQL não ter equivalente a `NOTIFY`/`LISTEN` | TRANSCRICAO | [09:09] Diego |
+| T020 | RFC | Alternativa Descartada | Entrega exactly-once descartada por exigir coordenação complexa entre plataforma e cliente | TRANSCRICAO | [09:25] Diego |
+| T021 | RFC | Questão em Aberto | Notificação de falhas persistentes ao cliente (ex. e-mail) adiada para fase futura | TRANSCRICAO | [09:37] Marcos |
+| T022 | RFC | Questão em Aberto | Rate limiting de envio ao cliente deixado para observação futura | TRANSCRICAO | [09:38] Diego |
+| T023 | RFC | Questão em Aberto | Dashboard visual para o cliente considerado fora de escopo, projeto separado do time de frontend | TRANSCRICAO | [09:39] Marcos |
+| T024 | RFC | Questão em Aberto | Escala para múltiplos workers e garantia de ordering global tratada como limitação conhecida, não decisão agora | TRANSCRICAO | [09:12] Diego |
+| T025 | RFC | Decisão | Proposta da função `publishWebhookEvent(tx, order, fromStatus, toStatus)` chamada a partir de `changeStatus`, recebendo o `tx` em vez de repository inteiro | TRANSCRICAO | [09:41] Bruno/Diego |

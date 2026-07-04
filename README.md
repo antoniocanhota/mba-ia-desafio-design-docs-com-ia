@@ -13,7 +13,8 @@
 1. **Análise da aplicação existente.** Rodei o plugin `project-analizer` sobre `src/` e `prisma/` para entender a arquitetura do OMS antes de escrever qualquer documento — os relatórios ficaram em `docs/others/reports/`. Isso evita citar arquivo, classe ou padrão que não existe de verdade no código.
 2. **Ata legível da reunião.** Com o prompt descrito em "Prompt para geração de documento da transcrição" abaixo, transformei a `TRANSCRICAO.md` bruta num documento legível (`docs/others/ata-reuniao-webhooks.md`), já separando decisão fechada de item descartado/adiado.
 3. **Extração das ADRs.** Rodei `/adr-from-meeting`: a Fase 1 leu a transcrição inteira e levantou 11 decisões candidatas rastreadas a `[hh:mm] Nome`, apresentando também os itens fora de escopo (e-mail de falha, rate limiting, dashboard) e os detalhes não arquiteturais (HTTPS, limite de payload) — sem gerar nenhum arquivo. Depois de eu confirmar quais formalizar (escolhi 8 das 11, deixando de fora ordering por `order_id`, filtragem de eventos na inserção e snapshot do payload, por serem mais consequência de outras decisões do que decisões isoladas), a Fase 2 gerou `docs/adrs/ADR-001` a `ADR-008` no formato MADR e atualizou `docs/TRACKER.md` com a rastreabilidade de cada decisão até a transcrição ou o código.
-4. **Próximos documentos.** RFC → FDD → PRD ainda estão como placeholder em `docs/`; a ideia é gerá-los nessa ordem (arquitetura primeiro, depois implementação, depois produto), usando as ADRs já fechadas como insumo, seguindo a "Ordem de execução sugerida" do enunciado original.
+4. **Consolidação do RFC.** Rodei `/rfc-from-adrs`: leu a transcrição inteira e as 8 ADRs já fechadas para não repetir decisão nenhuma, identificou Larissa como autora (ela se compromete a abrir o doc de design, `[09:50]`) e os outros 4 participantes como revisores, e escreveu `docs/RFC.md` com 4 alternativas de arquitetura descartadas na reunião (disparo síncrono, fila externa Redis Streams, trigger de banco, entrega exactly-once) e 4 questões em aberto (e-mail de alerta, rate limiting, dashboard visual, ordering com múltiplos workers), cada uma linkando a ADR correspondente e citando `[hh:mm] Nome`. Também acrescentou as linhas correspondentes em `docs/TRACKER.md`.
+5. **Próximos documentos.** FDD → PRD ainda estão como placeholder em `docs/`; a ideia é gerá-los nessa ordem (implementação primeiro, depois produto), usando o RFC e as ADRs já fechadas como insumo, seguindo a "Ordem de execução sugerida" do enunciado original.
 
 ## Prompts customizados
 
@@ -205,6 +206,56 @@ só por order_id em single-worker), e o que fica em aberto para revisão futura.
    de itens que ficaram de fora (fase 1) para ele confirmar que nada relevante foi perdido.
 ````
 
+### Prompt para consolidação do RFC a partir das ADRs
+
+Também virou comando de projeto, em [`.claude/commands/rfc-from-adrs.md`](.claude/commands/rfc-from-adrs.md), invocável como `/rfc-from-adrs`. Ao contrário do prompt de ADRs, esse não tem fase de confirmação prévia — ele lê as ADRs já fechadas como esqueleto de decisão e usa a transcrição só para contexto, alternativas descartadas e questões em aberto, com uma regra explícita de "disciplina de altitude" pra não deixar variação interna de uma ADR (ex. "3 tentativas" já coberta na ADR de retry) virar alternativa duplicada no RFC.
+
+````markdown
+---
+description: Gera docs/RFC.md a partir de TRANSCRICAO.md e das ADRs já fechadas em docs/adrs/, e atualiza docs/TRACKER.md
+argument-hint: "[caminho opcional para a transcrição, padrão: TRANSCRICAO.md]"
+---
+
+# Gerar o RFC a partir da transcrição e das ADRs
+
+Você vai consolidar a proposta técnica de uma feature num RFC (`docs/RFC.md`), usando as ADRs já fechadas em
+`docs/adrs/` como esqueleto de decisão e a transcrição da reunião como fonte de contexto, alternativas
+descartadas e questões em aberto.
+
+## Regras
+
+- Toda alternativa, questão em aberto ou afirmação de contexto precisa ser rastreável a uma fala da transcrição
+  no formato `[hh:mm] Nome`, ou a um ADR/arquivo real do código. Nunca invente alternativa, trade-off ou questão
+  que não esteja na transcrição.
+- Disciplina de altitude — o RFC opera em nível de arquitetura, não de decisão pontual nem de implementação:
+  - Se uma alternativa rejeitada já é o assunto central de uma ADR inteira (ex.: outbox vs. disparo síncrono vs.
+    fila externa), ela entra no RFC.
+  - Se uma alternativa rejeitada é só uma variação interna de uma decisão já fechada numa ADR (ex.: "3
+    tentativas" dentro da ADR de retry, que já decidiu 5), ela **não** entra como alternativa do RFC — já está
+    coberta nos "Prós e Contras das Opções" daquela ADR. Cite a ADR em vez de duplicar o trade-off.
+  - Não desça a detalhe de contrato, payload, matriz de erros ou fluxo passo a passo — isso é FDD.
+
+## Passo a passo (resumo)
+
+1. Leia a transcrição inteira e todas as ADRs em `docs/adrs/` — o RFC vai linká-las, não repeti-las.
+2. Identifique autor (quem se compromete a abrir o doc de design) e revisores (demais participantes).
+3. Levante as alternativas para "Alternativas Consideradas" (mínimo 2): abordagens de arquitetura inteiras
+   cogitadas e descartadas na reunião, cada uma com o trade-off explícito e a ADR que registrou a decisão
+   vencedora.
+4. Levante as "Questões em Aberto" (mínimo 2): pontos levantados e explicitamente não decididos, adiados, ou
+   deixados como "observar depois", que não viraram ADR nem são apenas detalhe de FDD.
+5. Antes de escrever, releia cada trecho citado e confirme que o resumo bate com o que foi dito, sem inverter
+   quem propôs o quê nem misturar falas de momentos diferentes.
+6. Escreva `docs/RFC.md` com Metadados, Resumo Executivo, Contexto e Problema, Proposta Técnica (linkando
+   `[ADR-NNN](adrs/ADR-NNN-titulo.md)` por sub-tópico), Alternativas Consideradas, Questões em Aberto, Impacto e
+   Riscos, e Decisões Relacionadas.
+7. Atualize `docs/TRACKER.md` sem sobrescrever linhas existentes: uma linha por alternativa (`Tipo` = "Alternativa
+   Descartada"), uma por questão em aberto (`Tipo` = "Questão em Aberto"), e uma por caminho de código novo
+   citado na Proposta Técnica ou nos Riscos.
+8. Feche com um resumo: quantas alternativas/questões entraram, quantos ADRs foram linkados, quantas linhas
+   novas entraram no tracker.
+````
+
 ## Iterações e ajustes
 
 Cheguei ao `/adr-from-meeting` acima depois de 4 iterações, todas motivadas por problemas concretos encontrados ao revisar (não ao rodar às cegas):
@@ -219,6 +270,9 @@ Cheguei ao `/adr-from-meeting` acima depois de 4 iterações, todas motivadas po
 - **`TRANSCRICAO.md`** — gravação literal da reunião técnica, fonte de verdade de todas as decisões documentadas.
 - **`docs/others/ata-reuniao-webhooks.md`** — versão legível da transcrição, com decisões, requisitos, pontos descartados/adiados e detalhes técnicos já separados.
 - **`docs/adrs/ADR-001` a `ADR-008`** — decisões arquiteturais fechadas (outbox em MySQL, worker em polling/processo separado, retry com backoff, DLQ com replay administrativo, HMAC-SHA256 com rotação de secret, entrega at-least-once, módulo de webhooks seguindo os padrões existentes), uma por arquivo, formato MADR, cada uma citando a fala da transcrição ou o arquivo de código que a embasa.
-- **`docs/TRACKER.md`** — tabela de rastreabilidade cruzada: liga cada item documentado (ADR, e futuramente RFC/FDD/PRD) de volta à `TRANSCRICAO.md` ou a um caminho real em `src/`.
-- **`docs/RFC.md`, `docs/FDD.md`, `docs/PRD.md`** — ainda placeholders; serão preenchidos nas próximas etapas do workflow, nessa ordem.
+- **`docs/RFC.md`** — proposta técnica submetida à equipe para revisão: resumo executivo, contexto, visão geral da solução por sub-tópico (cada um linkando a ADR correspondente), 4 alternativas de arquitetura descartadas, 4 questões em aberto, impacto e riscos.
+- **`docs/TRACKER.md`** — tabela de rastreabilidade cruzada: liga cada item documentado (ADRs e RFC, e futuramente FDD/PRD) de volta à `TRANSCRICAO.md` ou a um caminho real em `src/`.
+- **`docs/FDD.md`, `docs/PRD.md`** — ainda placeholders; serão preenchidos nas próximas etapas do workflow, nessa ordem (implementação, depois produto).
 - **`docs/others/reports/`** — saída do `project-analizer` (visão arquitetural, análise de componentes, auditoria de dependências) usada para embasar as citações a código nas ADRs.
+
+Ordem sugerida de leitura: `TRANSCRICAO.md` → `docs/adrs/` → `docs/RFC.md` → `docs/TRACKER.md`.
