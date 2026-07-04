@@ -34,18 +34,23 @@ Input padrão: `TRANSCRICAO.md` na raiz do repo. Se `$ARGUMENTS` tiver um caminh
    - **Decisões fechadas de arquitetura**: pontos em que alguém propõe e o grupo converge (frases como
      "decidido", "fica registrado como decisão", "anotado", ou uma proposta seguida de concordância explícita).
    - **Itens descartados ou adiados**: coisas cogitadas mas explicitamente rejeitadas ou empurradas pra uma fase
-     futura (ex.: notificação por e-mail, dashboard visual, rate limiting de saída). Esses **não** viram ADR —
-     apenas liste-os à parte, com a justificativa, para transparência.
+     futura. Para cada um, verifique se ele é uma **alternativa rejeitada de uma das decisões fechadas
+     identificadas acima** (ex.: Redis Streams rejeitado em favor do outbox em MySQL; 3 tentativas rejeitadas em
+     favor de 5) ou se é **genuinamente independente de qualquer decisão candidata** (ex.: notificação por
+     e-mail, dashboard visual, rate limiting de saída — nenhuma delas é alternativa de uma decisão tomada, são
+     features à parte que ficaram de fora do escopo). No primeiro caso, associe o item à decisão candidata
+     correspondente — ele vai alimentar a seção "Opções Consideradas" / "Prós e Contras" do ADR dela na Fase 2,
+     e não deve aparecer como excluído. Só entram na lista de excluídos os itens do segundo caso.
    - **Detalhes não arquiteturais**: o próprio grupo às vezes classifica algo como não sendo decisão
      arquitetural (ex.: exigir HTTPS, limite de tamanho de payload — tratados na reunião como validação de
      schema / requisito não funcional). Não os transforme em ADR; eles pertencem ao FDD.
 4. Monte uma lista numerada de **decisões candidatas a ADR** e apresente ao usuário uma tabela assim:
 
-   | # | Título proposto | Resumo em 1 linha | Referência na transcrição |
-   |---|---|---|---|
+   | # | Título proposto | Resumo em 1 linha | Alternativas rejeitadas associadas | Referência na transcrição |
+   |---|---|---|---|---|
 
-   Logo abaixo, liste em uma segunda tabela os **itens excluídos** (descartados/adiados/não arquiteturais) com
-   a justificativa e a referência.
+   Logo abaixo, liste em uma segunda tabela apenas os **itens realmente excluídos** (sem decisão candidata
+   associada: fora de escopo, adiados para fase futura, ou não arquiteturais) com a justificativa e a referência.
 
 5. Pare e pergunte ao usuário quais números da primeira tabela devem virar ADR (aceite respostas como uma lista
    de números, ou "todas"). **Não gere nenhum arquivo antes dessa resposta.**
@@ -61,7 +66,9 @@ Para cada decisão escolhida, na ordem em que aparecem na transcrição:
 2. **Verifique duplicidade**: se uma decisão equivalente já existir como ADR em `docs/adrs/`, não gere de novo —
    avise o usuário e siga para a próxima.
 3. **Preencha o template abaixo.** Headings do corpo ficam em português; são a tradução direta das 7 seções
-   MADR (Context and Problem Statement → Contexto e Problema, e assim por diante):
+   MADR (Context and Problem Statement → Contexto e Problema, e assim por diante). Em "Opções Consideradas" e
+   "Prós e Contras das Opções", use as alternativas rejeitadas associadas a esta decisão que você já levantou
+   na Fase 1 — não pesquise de novo do zero nem invente alternativa que não tenha aparecido lá.
 
 ```markdown
 # ADR-NNN: {Título da decisão}
