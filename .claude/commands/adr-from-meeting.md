@@ -159,7 +159,10 @@ só por order_id em single-worker), e o que fica em aberto para revisão futura.
    - Garanta que a tabela tenha o cabeçalho exigido:
      `| ID | Documento | Tipo | Conteúdo (resumo) | Fonte | Localização |`
    - Acrescente (não sobrescreva linhas existentes de outros documentos) uma linha por ADR novo, `Tipo` =
-     "Decisão", `Fonte` = `TRANSCRICAO`, `Localização` = a citação `[hh:mm] Nome` principal daquela decisão.
+     "Decisão", `Fonte` = `TRANSCRICAO`, `Localização` = a citação `[hh:mm] Nome` principal daquela decisão. Se
+     a decisão aparecer em mais de um momento da reunião (ex.: discutida no meio e depois reafirmada num resumo
+     de fechamento), cite o momento em que ela foi de fato **confirmada/fechada**, não o da discussão inicial —
+     mesmo que a fala de confirmação seja mais curta que a da discussão.
    - Acrescente também uma linha por caminho de código citado nas Referências do ADR, com `Fonte` = `CODIGO` e
      `Localização` = o caminho do arquivo.
 6. Feche com um resumo para o usuário: tabela com número, título, status e caminho de cada ADR criado, e a lista
