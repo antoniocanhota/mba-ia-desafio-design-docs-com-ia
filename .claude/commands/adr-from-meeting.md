@@ -44,16 +44,37 @@ Input padrão: `TRANSCRICAO.md` na raiz do repo. Se `$ARGUMENTS` tiver um caminh
    - **Detalhes não arquiteturais**: o próprio grupo às vezes classifica algo como não sendo decisão
      arquitetural (ex.: exigir HTTPS, limite de tamanho de payload — tratados na reunião como validação de
      schema / requisito não funcional). Não os transforme em ADR; eles pertencem ao FDD.
-4. Monte uma lista numerada de **decisões candidatas a ADR** e apresente ao usuário uma tabela assim:
+4. **Verificação cruzada** (antes de apresentar qualquer coisa ao usuário): para cada item candidato a ADR, cada
+   alternativa associada e cada item excluído, releia o(s) trecho(s) da transcrição citados como referência e
+   confirme que:
+   - o resumo descrito bate com o que foi dito, sem parafrasear de um jeito que muda o sentido, sem inverter
+     quem propôs ou quem decidiu, e sem misturar falas de momentos diferentes da reunião;
+   - a classificação do item (decisão fechada / alternativa associada a uma decisão / excluído por ser
+     independente / detalhe não arquitetural) está correta à luz do que o grupo realmente definiu;
+   - toda alternativa associada a uma decisão realmente foi discutida e rejeitada *para aquela decisão
+     específica*, não para outra.
 
-   | # | Título proposto | Resumo em 1 linha | Alternativas rejeitadas associadas | Referência na transcrição |
-   |---|---|---|---|---|
+   Se encontrar alguma divergência, corrija o item (resumo, classificação ou associação) e repita esta
+   verificação **apenas para os itens corrigidos**. Limite de **2 iterações de correção por item**. Se, depois
+   da 2ª iteração, ainda sobrar divergência não resolvida nesse item específico, pare de tentar corrigi-lo, use
+   a melhor versão obtida e marque-o como "⚠️ não confirmado" quando for apresentá-lo ao usuário, com uma nota
+   de uma linha explicando o que continua inconsistente.
+
+5. Monte uma lista numerada de **decisões candidatas a ADR** e apresente ao usuário uma tabela assim:
+
+   | # | Título proposto | Resumo em 1 linha | Alternativas rejeitadas associadas | Referência na transcrição | Confirmação |
+   |---|---|---|---|---|---|
 
    Logo abaixo, liste em uma segunda tabela apenas os **itens realmente excluídos** (sem decisão candidata
-   associada: fora de escopo, adiados para fase futura, ou não arquiteturais) com a justificativa e a referência.
+   associada: fora de escopo, adiados para fase futura, ou não arquiteturais) com a justificativa, a referência
+   e a mesma coluna de confirmação.
 
-5. Pare e pergunte ao usuário quais números da primeira tabela devem virar ADR (aceite respostas como uma lista
-   de números, ou "todas"). **Não gere nenhum arquivo antes dessa resposta.**
+   Na coluna "Confirmação", use "OK" para itens que passaram na verificação do passo 4, ou "⚠️ não confirmado —
+   {nota}" para os que ainda restaram divergentes após as 2 iterações.
+
+6. Pare e pergunte ao usuário quais números da primeira tabela devem virar ADR (aceite respostas como uma lista
+   de números, ou "todas"). Se houver itens marcados como "⚠️ não confirmado", chame atenção para eles
+   explicitamente antes de perguntar. **Não gere nenhum arquivo antes dessa resposta.**
 
 ---
 
