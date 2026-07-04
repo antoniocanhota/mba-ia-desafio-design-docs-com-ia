@@ -27,3 +27,6 @@
 | T023 | RFC | Questão em Aberto | Dashboard visual para o cliente considerado fora de escopo, projeto separado do time de frontend | TRANSCRICAO | [09:39] Marcos |
 | T024 | RFC | Questão em Aberto | Escala para múltiplos workers e garantia de ordering global tratada como limitação conhecida, não decisão agora | TRANSCRICAO | [09:12] Diego |
 | T025 | RFC | Decisão | Proposta da função `publishWebhookEvent(tx, order, fromStatus, toStatus)` chamada a partir de `changeStatus`, recebendo o `tx` em vez de repository inteiro | TRANSCRICAO | [09:41] Bruno/Diego |
+| T026 | ADR-006 | Restrição | Precedente real de vazamento de secret em log de aplicação de cliente, motivando secret única por endpoint | TRANSCRICAO | [09:22] Diego |
+| T027 | ADR-004 | Restrição | Precedente real de indisponibilidade de 2h por manutenção planejada em cliente, motivando rejeitar 3 tentativas de retry | TRANSCRICAO | [09:16] Diego |
+| T028 | ADR-002 | Requisito Não Funcional | Requisito de latência do cliente (abaixo de 10 segundos) que valida a folga do polling de 2 segundos | TRANSCRICAO | [09:02] Marcos |
