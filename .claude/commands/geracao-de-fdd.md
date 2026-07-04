@@ -29,16 +29,25 @@ Input padrão de transcrição: `TRANSCRICAO.md` na raiz do repo. Se `$ARGUMENTS
 
 Antes de iniciar a entrevista:
 
-1. Leia a transcrição inteira (`TRANSCRICAO.md` ou `$ARGUMENTS`).
-2. Leia, se existirem, `docs/PRD.md`, `docs/RFC.md`, todos os arquivos `docs/adrs/ADR-*.md` e `docs/TRACKER.md`.
-3. Para cada uma das 11 etapas do "Processo de Entrevista" abaixo, verifique se a resposta já está determinada pela
-   transcrição, pelo RFC ou por alguma ADR (exemplos deste projeto: timeout do worker em `[09:42] Diego`; formato
-   de payload e teto de 64KB em `[09:43]-[09:44] Diego`; headers `X-Event-Id`/`X-Signature`/`X-Timestamp`/
-   `X-Webhook-Id` em `[09:44]-[09:45] Diego/Sofia`; prefixo `WEBHOOK_` e módulo `src/modules/webhooks` no
-   `ADR-008`; função `publishWebhookEvent(tx, order, fromStatus, toStatus)` em `[09:41] Bruno/Diego`).
+1. Leia a transcrição inteira da reunião da feature (`TRANSCRICAO.md` ou `$ARGUMENTS`).
+2. Leia todo o diretório `docs/`, recursivamente: `docs/PRD.md`, `docs/RFC.md`, todos os arquivos
+   `docs/adrs/ADR-*.md`, `docs/TRACKER.md`, e os relatórios de análise arquitetural em `docs/others/reports/`
+   (ex.: `architectural-analyzer/architectural-report-*.md`, `dependency-auditor/dependencies-report-*.md`, e os
+   `component-deep-analyzer/component-analysis-*.md` — em especial os que cobrem a área do código que a feature
+   em questão toca). Esses relatórios são um atalho para entender o código mais rápido; ao citar algo neles no
+   FDD ou no Tracker, cite sempre o caminho real em `src/` descrito no relatório, nunca o caminho do relatório em
+   si.
+   **Exceção:** ignore qualquer ata/resumo derivado da transcrição em `docs/others/` (ex.: arquivos no padrão
+   `ata-*.md`) — são derivados, normalmente com timestamps só por faixa/seção, não por fala. Para qualquer
+   citação `[hh:mm] Nome`, use sempre a transcrição original como fonte primária, nunca um resumo dela.
+3. Para cada uma das 11 etapas do "Processo de Entrevista" abaixo, verifique se a resposta já está determinada
+   pela transcrição, pelo RFC, por alguma ADR ou pelos relatórios de análise já existentes (ex.: um requisito não
+   funcional específico como um timeout ou limite de tamanho já mencionado em algum trecho `[hh:mm] Nome`; um
+   padrão de nomenclatura de módulo, código de erro ou função de integração já registrado numa ADR; um contrato
+   de API já esboçado no RFC).
 4. Quando a resposta já existir numa dessas fontes, **não pergunte do zero**: apresente a resposta encontrada
-   (com a citação `[hh:mm] Nome` ou o link da ADR) e peça só confirmação ou ajuste. Reserve perguntas abertas
-   para o que genuinamente não está coberto por nenhuma fonte.
+   (com a citação `[hh:mm] Nome`, o link da ADR ou o caminho real de `src/`) e peça só confirmação ou ajuste.
+   Reserve perguntas abertas para o que genuinamente não está coberto por nenhuma fonte.
 5. Se `docs/FDD.md` já existir com conteúdo (não for só um stub), avise o usuário e pergunte se é para revisar o
    que já existe ou recomeçar do zero.
 
@@ -105,13 +114,15 @@ Além disso:
   públicos precisa ter no mínimo **4 endpoints HTTP**, cada um com exemplo de request, exemplo de response e
   status codes.
 - Em “Observabilidade”, especifique **métricas, logs e tracing** que validam o comportamento da feature.
-- Na matriz de erros, use códigos com o prefixo do módulo da feature (neste projeto, `WEBHOOK_*`), seguindo o
-  mesmo padrão de `AppError`/`errorCode` já usado no restante da base de código (ex.: `src/shared/errors/
-  http-errors.ts`).
+- Na matriz de erros, siga o mesmo padrão de `AppError`/`errorCode` já usado no restante da base de código
+  (`src/shared/errors/http-errors.ts`), com um prefixo próprio derivado do nome do módulo da feature (ex.: se a
+  feature vira `src/modules/<nome-do-modulo>`, os códigos seguem `<NOME_DO_MODULO>_*`). Verifique antes se já
+  existe um prefixo definido em alguma ADR/RFC da feature em vez de propor um novo.
 - A seção "Integração com o sistema existente" é obrigatória e deve citar **no mínimo 4 caminhos reais** de
-  `src/` (ex.: `src/modules/orders/order.service.ts`, `src/shared/errors/http-errors.ts`, `src/middlewares/
-  error.middleware.ts`, `src/middlewares/auth.middleware.ts`, `src/shared/logger/index.ts`), descrevendo como o
-  módulo da feature se integra com cada um.
+  `src/` que a feature efetivamente toca ou reaproveita (ex.: o service/repository do domínio mais próximo,
+  classes de erro em `src/shared/errors/`, o middleware de erro em `src/middlewares/error.middleware.ts`, o
+  middleware de auth em `src/middlewares/auth.middleware.ts`, o logger em `src/shared/logger/index.ts`),
+  descrevendo como o módulo da feature se integra com cada um.
 
 ---
 
@@ -346,7 +357,8 @@ Responsável: [responsável técnico]
 
 ### 6. Erros, exceções e fallback
 
-- Matriz de erros previstos e tratamentos (códigos com prefixo `[PREFIXO]_*`, ex.: `WEBHOOK_*` neste projeto)
+- Matriz de erros previstos e tratamentos (códigos com prefixo `[PREFIXO_DO_MODULO]_*`, seguindo o padrão de
+  `AppError`/`errorCode` do projeto)
 - Estratégias de resiliência: [timeouts, retries, backoff, circuit breaker]
 - Política de fallback
 - Invariantes: [lista de invariantes críticos]
@@ -417,7 +429,7 @@ Responsável: [responsável técnico]
 
 ### 11. Integração com o sistema existente
 
-**[caminho real 1, ex: src/modules/orders/order.service.ts]**
+**[caminho real 1, ex: src/modules/<domínio>/<domínio>.service.ts]**
 - [como a feature se integra com este arquivo/símbolo]
 
 **[caminho real 2]**
@@ -455,8 +467,9 @@ documentos:
 ## Mensagem inicial para o usuário
 
 Olá! Eu sou um assistente de criação de **FDD**.
-Antes de te perguntar qualquer coisa, vou ler `TRANSCRICAO.md` e os documentos já existentes em `docs/`
-(`PRD.md`, `RFC.md`, `adrs/`, `TRACKER.md`). O que já estiver respondido por eles eu te apresento para
+Antes de te perguntar qualquer coisa, vou ler `TRANSCRICAO.md` e todo o diretório `docs/` já existente
+(`PRD.md`, `RFC.md`, `adrs/`, `TRACKER.md` e os relatórios de análise em `others/reports/`), exceto atas/resumos
+derivados da transcrição (ex.: `docs/others/ata-*.md`). O que já estiver respondido por eles eu te apresento para
 confirmação; só pergunto do zero o que ainda não está coberto.
 Vou cobrir contexto técnico, objetivos, escopo, fluxos, contratos públicos, erros/fallback, observabilidade,
 dependências, critérios de aceite, riscos e integração com o sistema existente.
