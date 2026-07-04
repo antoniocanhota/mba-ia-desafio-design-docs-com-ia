@@ -10,7 +10,10 @@
 
 ## Workflow adotado
 
-Primeiro fiz uma análise do projeto para enteder o que ele faz. E seguida, pedi para gerar um documento mais legível sobre o que foi discutido na reunião.
+1. **Análise da aplicação existente.** Rodei o plugin `project-analizer` sobre `src/` e `prisma/` para entender a arquitetura do OMS antes de escrever qualquer documento — os relatórios ficaram em `docs/others/reports/`. Isso evita citar arquivo, classe ou padrão que não existe de verdade no código.
+2. **Ata legível da reunião.** Com o prompt descrito em "Prompt para geração de documento da transcrição" abaixo, transformei a `TRANSCRICAO.md` bruta num documento legível (`docs/others/ata-reuniao-webhooks.md`), já separando decisão fechada de item descartado/adiado.
+3. **Extração das ADRs.** Rodei `/adr-from-meeting`: a Fase 1 leu a transcrição inteira e levantou 11 decisões candidatas rastreadas a `[hh:mm] Nome`, apresentando também os itens fora de escopo (e-mail de falha, rate limiting, dashboard) e os detalhes não arquiteturais (HTTPS, limite de payload) — sem gerar nenhum arquivo. Depois de eu confirmar quais formalizar (escolhi 8 das 11, deixando de fora ordering por `order_id`, filtragem de eventos na inserção e snapshot do payload, por serem mais consequência de outras decisões do que decisões isoladas), a Fase 2 gerou `docs/adrs/ADR-001` a `ADR-008` no formato MADR e atualizou `docs/TRACKER.md` com a rastreabilidade de cada decisão até a transcrição ou o código.
+4. **Próximos documentos.** RFC → FDD → PRD ainda estão como placeholder em `docs/`; a ideia é gerá-los nessa ordem (arquitetura primeiro, depois implementação, depois produto), usando as ADRs já fechadas como insumo, seguindo a "Ordem de execução sugerida" do enunciado original.
 
 ## Prompts customizados
 
@@ -213,4 +216,9 @@ Cheguei ao `/adr-from-meeting` acima depois de 4 iterações, todas motivadas po
 
 ## Como navegar a entrega
 
-## Como navegar a entrega
+- **`TRANSCRICAO.md`** — gravação literal da reunião técnica, fonte de verdade de todas as decisões documentadas.
+- **`docs/others/ata-reuniao-webhooks.md`** — versão legível da transcrição, com decisões, requisitos, pontos descartados/adiados e detalhes técnicos já separados.
+- **`docs/adrs/ADR-001` a `ADR-008`** — decisões arquiteturais fechadas (outbox em MySQL, worker em polling/processo separado, retry com backoff, DLQ com replay administrativo, HMAC-SHA256 com rotação de secret, entrega at-least-once, módulo de webhooks seguindo os padrões existentes), uma por arquivo, formato MADR, cada uma citando a fala da transcrição ou o arquivo de código que a embasa.
+- **`docs/TRACKER.md`** — tabela de rastreabilidade cruzada: liga cada item documentado (ADR, e futuramente RFC/FDD/PRD) de volta à `TRANSCRICAO.md` ou a um caminho real em `src/`.
+- **`docs/RFC.md`, `docs/FDD.md`, `docs/PRD.md`** — ainda placeholders; serão preenchidos nas próximas etapas do workflow, nessa ordem.
+- **`docs/others/reports/`** — saída do `project-analizer` (visão arquitetural, análise de componentes, auditoria de dependências) usada para embasar as citações a código nas ADRs.
