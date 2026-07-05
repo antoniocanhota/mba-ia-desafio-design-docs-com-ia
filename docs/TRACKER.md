@@ -19,7 +19,7 @@
 | T015 | ADR-008 | Código | Middleware central de erro | CODIGO | src/middlewares/error.middleware.ts |
 | T016 | ADR-008 | Código | Logger Pino já integrado ao projeto | CODIGO | src/shared/logger/index.ts |
 | T017 | RFC | Alternativa Descartada | Disparo síncrono dentro de `OrderService.changeStatus` descartado por acoplar disponibilidade de cliente externo à transação crítica | TRANSCRICAO | [09:04] Bruno |
-| T018 | RFC | Alternativa Descartada | Fila externa dedicada (Redis Streams) descartada por overengineering para um time pequeno | TRANSCRICAO | [09:07] Larissa |
+| T018 | RFC | Alternativa Descartada | Fila externa dedicada (Redis Streams) descartada por overengineering para um time pequeno | TRANSCRICAO | [09:07] Larissa/Diego |
 | T019 | RFC | Alternativa Descartada | Trigger de banco de dados para notificação reativa descartado por MySQL não ter equivalente a `NOTIFY`/`LISTEN` | TRANSCRICAO | [09:09] Diego |
 | T020 | RFC | Alternativa Descartada | Entrega exactly-once descartada por exigir coordenação complexa entre plataforma e cliente | TRANSCRICAO | [09:25] Diego |
 | T021 | RFC | Questão em Aberto | Notificação de falhas persistentes ao cliente (ex. e-mail) adiada para fase futura | TRANSCRICAO | [09:37] Marcos |
@@ -62,7 +62,7 @@
 | T058 | FDD | Restrição | Escopo restrito a webhooks outbound; plataforma não recebe webhooks de clientes | TRANSCRICAO | [09:02]-[09:03] Sofia/Marcos |
 | T059 | docs/PRD.md | Objetivo | Eliminar polling manual: latência de notificação abaixo de 10s | TRANSCRICAO | [09:02] Marcos |
 | T060 | docs/PRD.md | Escopo | Cadastro, edição, remoção e listagem de webhooks com filtro de status | TRANSCRICAO | [09:31]-[09:34] Marcos/Bruno |
-| T061 | docs/PRD.md | Escopo | Entrega de notificação HTTP assinada na mudança de status | TRANSCRICAO | [09:00]-[09:26] diversos |
+| T061 | docs/PRD.md | Escopo | Entrega de notificação HTTP assinada na mudança de status | TRANSCRICAO | [09:00]-[09:26] Marcos/Bruno/Larissa/Diego/Sofia |
 | T062 | docs/PRD.md | Escopo | Rotação de secret com grace period de 24h | TRANSCRICAO | [09:21] Sofia |
 | T063 | docs/PRD.md | Escopo | Histórico de entregas, últimos 100 registros | TRANSCRICAO | [09:34] Marcos |
 | T064 | docs/PRD.md | Escopo | Reprocessamento manual de DLQ restrito a admin | TRANSCRICAO | [09:18]-[09:19], [09:35]-[09:36] Diego/Bruno/Sofia/Larissa |
@@ -78,11 +78,11 @@
 | T074 | docs/PRD.md | Requisito Funcional | FR-004 Listagem de webhooks | TRANSCRICAO | [09:33] Bruno |
 | T075 | docs/PRD.md | Requisito Funcional | FR-005 Rotação de secret | TRANSCRICAO | [09:21] Sofia |
 | T076 | docs/PRD.md | Requisito Funcional | FR-006 Consulta de histórico de entregas | TRANSCRICAO | [09:34] Marcos |
-| T077 | docs/PRD.md | Requisito Funcional | FR-007 Entrega de notificação de mudança de status | TRANSCRICAO | [09:00]-[09:26] diversos |
+| T077 | docs/PRD.md | Requisito Funcional | FR-007 Entrega de notificação de mudança de status | TRANSCRICAO | [09:00]-[09:26] Marcos/Bruno/Larissa/Diego/Sofia |
 | T078 | docs/PRD.md | Requisito Funcional | FR-008 Reprocessamento administrativo de entregas malsucedidas | TRANSCRICAO | [09:18]-[09:19], [09:35]-[09:36] |
 | T079 | docs/PRD.md | Requisito Não Funcional | Performance: timeout de 10s por tentativa e latência abaixo de 10s | TRANSCRICAO | [09:42] Diego / [09:02] Marcos |
 | T080 | docs/PRD.md | Requisito Não Funcional | Segurança: HMAC-SHA256, secret por endpoint, rotação, HTTPS obrigatório, ADMIN no replay | TRANSCRICAO | [09:20]-[09:23], [09:36] Sofia |
-| T081 | docs/PRD.md | Requisito Não Funcional | Confiabilidade: atomicidade outbox, entrega at-least-once, retry com backoff | TRANSCRICAO | [09:04]-[09:26] diversos |
+| T081 | docs/PRD.md | Requisito Não Funcional | Confiabilidade: atomicidade outbox, entrega at-least-once, retry com backoff | TRANSCRICAO | [09:04]-[09:26] Bruno/Diego/Larissa/Marcos/Sofia |
 | T082 | docs/PRD.md | Requisito Não Funcional | Compatibilidade: payload de evento limitado a 64KB | TRANSCRICAO | [09:23]-[09:24] Sofia/Diego/Larissa |
 | T083 | docs/PRD.md | Requisito Não Funcional | Compliance: auditoria de reprocessamentos administrativos | TRANSCRICAO | [09:36] Sofia |
 | T084 | docs/PRD.md | Decisão | Entrega assíncrona via outbox, não síncrona | TRANSCRICAO | [09:04] Bruno |
@@ -90,7 +90,7 @@
 | T086 | docs/PRD.md | Decisão | Secret única por endpoint, com rotação e grace period de 24h | TRANSCRICAO | [09:21]-[09:22] Sofia/Diego |
 | T087 | docs/PRD.md | Decisão | 5 tentativas de retry com backoff de até 12h antes de desistir | TRANSCRICAO | [09:16] Diego |
 | T088 | docs/PRD.md | Dependência | Revisão de segurança da Sofia antes do deploy (2 dias úteis) | TRANSCRICAO | [09:46]-[09:47] Sofia/Larissa |
-| T089 | docs/PRD.md | Dependência | Documentação no portal de desenvolvedor para os clientes | TRANSCRICAO | [09:26], [09:36], [09:40] Marcos |
+| T089 | docs/PRD.md | Dependência | Documentação no portal de desenvolvedor para os clientes | TRANSCRICAO | [09:26], [09:40] Marcos |
 | T090 | docs/PRD.md | Dependência | Cliente implementa verificação de HMAC e dedup do lado dele | TRANSCRICAO | [09:25] Diego |
 | T091 | docs/PRD.md | Risco | Churn do cliente Atlas se o prazo não for cumprido | TRANSCRICAO | [09:45]-[09:47] Larissa/Sofia/Marcos |
 | T092 | docs/PRD.md | Risco | Indisponibilidade prolongada do endpoint do cliente | TRANSCRICAO | [09:16]-[09:17] Diego |

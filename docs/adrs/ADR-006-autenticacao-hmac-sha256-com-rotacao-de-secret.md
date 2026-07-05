@@ -1,7 +1,7 @@
 # ADR-006: Autenticação de Webhooks via HMAC-SHA256 com Rotação de Secret
 
 **Status:** Rascunho
-**Data:** [A DEFINIR]
+**Data:** 2026-07-04
 **Tags:** segurança, HMAC, autenticação, rotação de secret
 **Supersedes:** Nenhuma
 **Amends:** Nenhuma

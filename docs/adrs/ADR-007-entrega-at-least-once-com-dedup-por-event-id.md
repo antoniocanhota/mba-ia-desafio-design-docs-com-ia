@@ -1,7 +1,7 @@
 # ADR-007: Entrega At-Least-Once com Deduplicação por Event ID
 
 **Status:** Rascunho
-**Data:** [A DEFINIR]
+**Data:** 2026-07-04
 **Tags:** at-least-once, idempotência, contrato de API
 **Supersedes:** Nenhuma
 **Amends:** Nenhuma

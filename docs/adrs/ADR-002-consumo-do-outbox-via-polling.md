@@ -1,7 +1,7 @@
 # ADR-002: Consumo do Outbox via Polling (2 segundos)
 
 **Status:** Rascunho
-**Data:** [A DEFINIR]
+**Data:** 2026-07-04
 **Tags:** outbox, polling, worker, latência
 **Supersedes:** Nenhuma
 **Amends:** Nenhuma

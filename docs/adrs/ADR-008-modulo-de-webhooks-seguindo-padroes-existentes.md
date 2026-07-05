@@ -1,7 +1,7 @@
 # ADR-008: Módulo de Webhooks Seguindo Padrões Existentes do Projeto
 
 **Status:** Rascunho
-**Data:** [A DEFINIR]
+**Data:** 2026-07-04
 **Tags:** convenção, módulo, tratamento de erros, reuso
 **Supersedes:** Nenhuma
 **Amends:** Nenhuma

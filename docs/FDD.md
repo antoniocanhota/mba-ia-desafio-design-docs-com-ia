@@ -132,9 +132,12 @@ stateDiagram-v2
 
 ### 5. Contratos públicos (assinaturas, endpoints, headers, exemplos)
 
+> **Nota sobre a origem das rotas:** a reunião definiu os verbos HTTP e a intenção de cada endpoint, mas só citou o path completo, literalmente, para os endpoints 6 e 7 ([09:34] Marcos e [09:35] Diego). Os demais paths (`/api/v1/webhooks...`) seguem por inferência de convenção a estrutura já usada por `order.routes.ts` (prefixo `/api/v1/<módulo>`) — cada entrada abaixo indica explicitamente qual é o caso.
+
 **1. Cadastro de webhook**
 - Tipo: http_endpoint
 - Assinatura/Rota: `POST /api/v1/webhooks`
+- Origem da rota: verbo e intenção citados na reunião ([09:31] Marcos: "endpoint POST"); path completo inferido por convenção (`/api/v1/<módulo>`, mesmo prefixo de `order.routes.ts`), não citação literal
 - Método: POST
 - Semântica de status/headers:
   - `201` — webhook criado, secret retornada em texto claro apenas nesta resposta
@@ -168,6 +171,7 @@ stateDiagram-v2
 **2. Listagem de webhooks**
 - Tipo: http_endpoint
 - Assinatura/Rota: `GET /api/v1/webhooks?customerId=`
+- Origem da rota: verbo e intenção citados na reunião ([09:33] Bruno: "GET pra listar"); path completo inferido por convenção, não citação literal
 - Método: GET
 - Semântica de status/headers:
   - `200` — lista paginada; campo `secret` nunca aparece nesta resposta
@@ -199,6 +203,7 @@ GET /api/v1/webhooks?customerId=3f9e9b4a-1234-4c56-9abc-1234567890ab&page=1&page
 **3. Edição de webhook**
 - Tipo: http_endpoint
 - Assinatura/Rota: `PATCH /api/v1/webhooks/:id`
+- Origem da rota: verbo e intenção citados na reunião ([09:33] Bruno: "PATCH pra editar"); path completo inferido por convenção, não citação literal
 - Método: PATCH
 - Semântica de status/headers:
   - `200` — atualizado
@@ -230,6 +235,7 @@ GET /api/v1/webhooks?customerId=3f9e9b4a-1234-4c56-9abc-1234567890ab&page=1&page
 **4. Remoção de webhook**
 - Tipo: http_endpoint
 - Assinatura/Rota: `DELETE /api/v1/webhooks/:id`
+- Origem da rota: verbo e intenção citados na reunião ([09:33] Bruno: "DELETE pra remover"); path completo inferido por convenção, não citação literal
 - Método: DELETE
 - Semântica de status/headers:
   - `204` — removido, sem corpo de resposta
@@ -250,6 +256,7 @@ DELETE /api/v1/webhooks/a1b2c3d4-0000-4000-8000-000000000001
 **5. Rotação de secret**
 - Tipo: http_endpoint
 - Assinatura/Rota: `POST /api/v1/webhooks/:id/secret/rotate`
+- Origem da rota: intenção ("endpoint pro cliente conseguir pedir nova secret pela API", [09:21] Sofia) citada na reunião; path completo inferido por convenção, não citação literal
 - Método: POST
 - Semântica de status/headers:
   - `200` — nova secret gerada; `previousSecretExpiresAt` indica quando a secret anterior deixa de ser aceita (grace period de 24h, [09:21] Sofia)
@@ -274,6 +281,7 @@ POST /api/v1/webhooks/a1b2c3d4-0000-4000-8000-000000000001/secret/rotate
 **6. Histórico de entregas**
 - Tipo: http_endpoint
 - Assinatura/Rota: `GET /api/v1/webhooks/:id/deliveries`
+- Origem da rota: path citado literalmente na reunião como `GET /webhooks/:id/deliveries` ([09:34] Marcos); prefixo `/api/v1` acrescentado por convenção do projeto
 - Método: GET
 - Semântica de status/headers:
   - `200` — lista paginada, limitada aos últimos 100 registros ([09:34] Marcos)
@@ -318,6 +326,7 @@ GET /api/v1/webhooks/a1b2c3d4-0000-4000-8000-000000000001/deliveries?page=1&page
 **7. Replay administrativo de DLQ**
 - Tipo: http_endpoint
 - Assinatura/Rota: `POST /api/v1/admin/webhooks/dead-letter/:id/replay`
+- Origem da rota: path citado literalmente na reunião como `POST /admin/webhooks/dead-letter/:id/replay` ([09:35] Diego); prefixo `/api/v1` acrescentado por convenção do projeto
 - Método: POST
 - Semântica de status/headers:
   - `200` — evento reenfileirado em `webhook_outbox` como `PENDING`; ação registrada em log de auditoria com o id do admin ([09:36] Sofia)

@@ -1,7 +1,7 @@
 # ADR-001: Padrão Outbox em MySQL para Captura Transacional de Eventos de Webhook
 
 **Status:** Rascunho
-**Data:** [A DEFINIR]
+**Data:** 2026-07-04
 **Tags:** outbox, transação, resiliência, integração
 **Supersedes:** Nenhuma
 **Amends:** Nenhuma

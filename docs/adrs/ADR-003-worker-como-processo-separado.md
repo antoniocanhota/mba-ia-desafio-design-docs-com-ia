@@ -1,7 +1,7 @@
 # ADR-003: Worker como Processo Separado
 
 **Status:** Rascunho
-**Data:** [A DEFINIR]
+**Data:** 2026-07-04
 **Tags:** worker, processo, deploy, prisma
 **Supersedes:** Nenhuma
 **Amends:** Nenhuma

@@ -1,7 +1,7 @@
 # ADR-004: Retry com Backoff Exponencial e Limite de 5 Tentativas
 
 **Status:** Rascunho
-**Data:** [A DEFINIR]
+**Data:** 2026-07-04
 **Tags:** retry, backoff, resiliência, DLQ
 **Supersedes:** Nenhuma
 **Amends:** Nenhuma

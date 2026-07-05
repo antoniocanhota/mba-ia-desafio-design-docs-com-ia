@@ -1,7 +1,7 @@
 # ADR-005: Dead Letter Queue em Tabela Separada com Replay Administrativo
 
 **Status:** Rascunho
-**Data:** [A DEFINIR]
+**Data:** 2026-07-04
 **Tags:** DLQ, resiliência, auditoria, autorização
 **Supersedes:** Nenhuma
 **Amends:** Nenhuma
