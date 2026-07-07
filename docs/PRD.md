@@ -14,6 +14,17 @@ Três clientes B2B do Order Management System (Atlas Comercial, MaxDistribuiçã
 
 ### Contexto e problema
 
+Onde essa feature será implantada
+- Sistema existente: novo módulo (`src/modules/webhooks`) dentro do Order Management System já existente, reaproveitando banco de dados, autenticação e padrões de código já estabelecidos ([RFC.md](RFC.md), [FDD.md](FDD.md))
+
+Problemas priorizados
+- Polling repetido em `GET /orders` torna a integração dos clientes B2B lenta e cara, sem números de custo quantificados nesta fase (hipótese não quantificada); prioridade alta, dado o risco concreto de a Atlas Comercial migrar para um concorrente ([09:00] Marcos)
+- Não há registro de nenhuma tentativa paliativa anterior a essa proposta
+
+---
+
+### Público-alvo e cenários de uso
+
 Público-alvo
 - Clientes B2B que consomem a API do OMS e hoje fazem polling em `GET /orders` (nominalmente Atlas Comercial, MaxDistribuição e Nova Cargo) ([09:00] Marcos)
 - Usuários operadores autenticados que cadastram e gerenciam webhooks em nome do cliente ([09:31]-[09:33] Marcos/Bruno/Larissa)
@@ -23,13 +34,6 @@ Cenários de uso chave
 - Cliente B2B cadastra um webhook e passa a receber notificações automáticas de mudança de status, sem precisar mais consultar `GET /orders` repetidamente
 - Operador configura, edita ou remove webhooks de um cliente, e consulta o histórico de entregas para diagnosticar problemas de integração
 - Administrador reprocessa manualmente um evento que esgotou as tentativas automáticas de entrega
-
-Onde essa feature será implantada
-- Sistema existente: novo módulo (`src/modules/webhooks`) dentro do Order Management System já existente, reaproveitando banco de dados, autenticação e padrões de código já estabelecidos ([RFC.md](RFC.md), [FDD.md](FDD.md))
-
-Problemas priorizados
-- Polling repetido em `GET /orders` torna a integração dos clientes B2B lenta e cara, sem números de custo quantificados nesta fase (hipótese não quantificada); prioridade alta, dado o risco concreto de a Atlas Comercial migrar para um concorrente ([09:00] Marcos)
-- Não há registro de nenhuma tentativa paliativa anterior a essa proposta
 
 ---
 
