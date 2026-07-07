@@ -64,8 +64,15 @@ O projeto ganha uma pasta `src/modules/webhooks` com `webhook.controller.ts`, `w
 `webhook.repository.ts`, `webhook.schemas.ts` e `webhook.routes.ts`, seguindo a mesma estrutura dos demais
 módulos, além de um arquivo de processamento (`webhook.worker.ts` ou `webhook.processor.ts`) chamado a partir de
 `src/worker.ts` (ADR-003). As classes de erro do módulo estendem `AppError` com códigos prefixados por
-`WEBHOOK_`, seguindo a convenção de `http-errors.ts`. Não são necessárias mudanças no middleware de erro
-centralizado nem na configuração do logger.
+`WEBHOOK_`, seguindo a convenção de `http-errors.ts`. O middleware de erro centralizado não precisa de nenhuma
+mudança para tratar os novos erros `WEBHOOK_*`.
+
+O logger Pino é reaproveitado como componente — nenhuma biblioteca ou infraestrutura de log nova é introduzida,
+conforme decidido na reunião ([09:29] Bruno). Isso **não** significa que o arquivo de configuração do logger
+fique intocado: o FDD acrescenta `*.secret` e `*.signature` aos `redactPaths` já existentes em
+`src/shared/logger/index.ts` como endurecimento de segurança, para a secret nunca vazar em log — refinamento de
+implementação motivado pelo incidente real relatado em [09:22] Diego, e não uma decisão desta ADR. Esta ADR
+decide o *reuso do componente*, não a ausência de qualquer ajuste de configuração.
 
 ## Referências
 
