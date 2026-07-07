@@ -6,9 +6,11 @@ A tarefa pedida neste desafio é a elaboração de design docs, tais como PRD, R
 
 ## Ferramentas de IA utilizadas
 
-* Claude Code - utilizado porque é a ferramenta que já assino justamente por ser amplamente utilizada em ambientes de desenvolvimento.
+* **Claude Code** — ferramenta principal de produção, usada para ler o código, analisar a transcrição, estruturar e gerar todos os documentos. Escolhi porque já a assino e é amplamente utilizada em ambientes de desenvolvimento.
 
-* Plugin project-analizer da Full Cycle - permitiu a geração da documentação de arquitetura atual para entender o projeto.
+* **Plugin `project-analizer` (Full Cycle)** — gerou os relatórios de arquitetura do OMS existente (`docs/others/reports/`), usados como contexto para entender o projeto antes de documentar a feature.
+
+* **Comandos de projeto customizados (slash commands do Claude Code)** — quatro comandos que escrevi e adaptei para este desafio, cada um encapsulando um prompt dirigido e reutilizável: `/adr-from-meeting` (extração de ADRs da transcrição em duas fases), `/rfc-from-adrs` (consolidação do RFC a partir das ADRs), `/geracao-de-fdd` e `/geracao-de-prd` (entrevistas guiadas para FDD e PRD). Ficam em `.claude/commands/` e estão detalhados na seção "Prompts customizados".
 
 ## Workflow adotado
 
