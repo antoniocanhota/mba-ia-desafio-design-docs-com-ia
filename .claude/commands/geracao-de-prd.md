@@ -370,6 +370,7 @@ Antes de gerar o PRD final:
 - Cada risco tem probabilidade, impacto, mitigação (podendo ter vários subitens) e plano de contingência.
 - A checklist de critérios de aceitação está objetiva e verificável.
 - Os tipos de teste obrigatórios estão definidos.
+- Cada seção obrigatória do PRD tem heading próprio (`###`) e não fica rebaixada a rótulo de texto dentro de outra seção. Em especial, "Público-alvo e cenários de uso" é uma seção com heading próprio, e não um bloco solto dentro de "Contexto e problema".
 
 ## Defaults Inteligentes
 
@@ -411,6 +412,17 @@ Responsável: [responsavel_prd]
 
 ### Contexto e problema
 
+Onde essa feature será implantada
+- [contexto_implantacao.descricao]
+
+Problemas priorizados
+- [problema 1 com impacto e prioridade]
+- [problema 2 com impacto e prioridade]
+
+---
+
+### Público-alvo e cenários de uso
+
 Público-alvo
 - [público alvo 1]
 - [público alvo 2]
@@ -418,13 +430,6 @@ Público-alvo
 Cenários de uso chave
 - [cenário 1]
 - [cenário 2]
-
-Onde essa feature será implantada
-- [contexto_implantacao.descricao]
-
-Problemas priorizados
-- [problema 1 com impacto e prioridade]
-- [problema 2 com impacto e prioridade]
 
 ---
 
